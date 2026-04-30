@@ -17,8 +17,6 @@
             --card: #ffffff;
             --text: #2c1810;
             --border: #e0d5c7;
-            --success: #4caf50;
-            --danger: #e74c3c;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +29,40 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* شريط التطبيق العلوي */
+        /* شاشة الترحيب والتحميل */
+        .splash {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: var(--bg);
+            padding: 20px;
+        }
+        .splash .icon { font-size: 4em; animation: bounce 1s infinite; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .splash h2 { color: var(--primary); margin: 10px 0; }
+        .splash .status { color: #888; margin-top: 20px; font-size: 0.95em; }
+        .splash .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            width: 220px;
+            margin: 15px auto;
+            overflow: hidden;
+        }
+        .splash .progress-fill {
+            height: 100%;
+            background: var(--primary-light);
+            width: 0%;
+            transition: width 0.4s;
+        }
+
+        /* التطبيق */
         .app-bar {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
@@ -44,25 +75,9 @@
             justify-content: space-between;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
+        .app-bar h1 { font-size: 1.1em; }
+        .app-bar .badge { background: var(--accent); color: #000; padding: 4px 12px; border-radius: 15px; font-size: 0.75em; font-weight: bold; }
 
-        .app-bar h1 {
-            font-size: 1.1em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .app-bar .badge {
-            background: var(--accent);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.75em;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        /* تبويب التنقل السفلي */
         .bottom-nav {
             background: white;
             display: flex;
@@ -71,7 +86,6 @@
             z-index: 100;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
-
         .bottom-nav button {
             flex: 1;
             padding: 10px 5px;
@@ -80,44 +94,22 @@
             cursor: pointer;
             font-size: 0.75em;
             color: #888;
-            transition: 0.2s;
             font-family: inherit;
         }
+        .bottom-nav button.active { color: var(--primary); font-weight: bold; border-top: 2px solid var(--primary); }
+        .bottom-nav button .icon { display: block; font-size: 1.5em; margin-bottom: 2px; }
 
-        .bottom-nav button.active {
-            color: var(--primary);
-            font-weight: bold;
-            border-top: 2px solid var(--primary);
-        }
+        .main-content { padding: 12px; padding-bottom: 80px; }
 
-        .bottom-nav button .icon {
-            display: block;
-            font-size: 1.5em;
-            margin-bottom: 2px;
-        }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        /* المحتوى الرئيسي */
-        .main-content {
-            padding: 12px;
-            padding-bottom: 80px;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* بطاقات الإحصائيات */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 15px;
         }
-
         .stat-card {
             background: var(--card);
             padding: 12px;
@@ -126,20 +118,9 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             border-right: 3px solid var(--primary-light);
         }
+        .stat-card .number { font-size: 1.6em; font-weight: bold; color: var(--primary); }
+        .stat-card .label { font-size: 0.75em; color: #888; margin-top: 3px; }
 
-        .stat-card .number {
-            font-size: 1.6em;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .stat-card .label {
-            font-size: 0.75em;
-            color: #888;
-            margin-top: 3px;
-        }
-
-        /* شريط البحث */
         .search-bar {
             background: var(--card);
             border-radius: 25px;
@@ -148,38 +129,19 @@
             padding: 8px 16px;
             margin-bottom: 15px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            gap: 8px;
         }
+        .search-bar input { flex: 1; border: none; font-size: 16px; padding: 8px; background: transparent; font-family: inherit; }
+        .search-bar input:focus { outline: none; }
+        .search-bar .icon { font-size: 1.3em; opacity: 0.5; margin-left: 5px; }
 
-        .search-bar input {
-            flex: 1;
-            border: none;
-            font-size: 16px;
-            padding: 8px;
-            background: transparent;
-            font-family: inherit;
-        }
-
-        .search-bar input:focus {
-            outline: none;
-        }
-
-        .search-bar .icon {
-            font-size: 1.3em;
-            opacity: 0.5;
-        }
-
-        /* أزرار التصنيفات */
         .category-chips {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 15px;
-            max-height: 120px;
+            max-height: 130px;
             overflow-y: auto;
-            padding-bottom: 5px;
         }
-
         .chip {
             padding: 6px 14px;
             border-radius: 20px;
@@ -188,94 +150,31 @@
             cursor: pointer;
             font-size: 0.8em;
             white-space: nowrap;
-            transition: 0.2s;
             font-family: inherit;
         }
+        .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .chip.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* قائمة الكتب */
-        .book-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .book-list { display: flex; flex-direction: column; gap: 8px; }
         .book-card {
             background: var(--card);
             border-radius: 10px;
             padding: 14px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.04);
             cursor: pointer;
-            transition: 0.2s;
             border-right: 3px solid transparent;
+            transition: 0.2s;
         }
+        .book-card:hover, .book-card:active { border-right-color: var(--primary-light); background: #fafffe; }
+        .book-card .book-title { font-weight: bold; font-size: 0.95em; margin-bottom: 6px; color: var(--primary); }
+        .book-card .book-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.75em; color: #666; }
+        .book-card .book-meta span { background: #f0f0f0; padding: 3px 8px; border-radius: 10px; }
+        .book-card .donor { margin-top: 8px; font-size: 0.7em; color: var(--primary-light); font-weight: bold; }
 
-        .book-card:hover, .book-card:active {
-            border-right-color: var(--primary-light);
-            background: #fafffe;
-        }
+        .detail-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .detail-label { color: #888; font-size: 0.85em; }
+        .detail-value { font-weight: bold; text-align: left; }
 
-        .book-card .book-title {
-            font-weight: bold;
-            font-size: 0.95em;
-            margin-bottom: 6px;
-            color: var(--primary);
-        }
-
-        .book-card .book-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.75em;
-            color: #666;
-        }
-
-        .book-card .book-meta span {
-            background: #f0f0f0;
-            padding: 3px 8px;
-            border-radius: 10px;
-            white-space: nowrap;
-        }
-
-        .book-card .donor {
-            margin-top: 8px;
-            font-size: 0.7em;
-            color: var(--primary-light);
-            font-weight: bold;
-        }
-
-        /* صفحة التفاصيل */
-        .detail-card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .detail-label {
-            color: #888;
-            font-size: 0.85em;
-        }
-
-        .detail-value {
-            font-weight: bold;
-            text-align: left;
-        }
-
-        /* أزرار */
         .btn {
             padding: 10px 20px;
             border-radius: 20px;
@@ -283,44 +182,24 @@
             cursor: pointer;
             font-family: inherit;
             font-size: 0.9em;
-            transition: 0.2s;
         }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
+        .empty-state .icon { font-size: 3em; margin-bottom: 10px; }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        /* رسالة التثبيت */
         .install-banner {
             background: linear-gradient(135deg, #fff3cd, #ffeaa7);
             padding: 12px 16px;
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin: 10px;
             display: none;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
         }
+        .install-banner button { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; font-family: inherit; white-space: nowrap; }
 
-        .install-banner button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-
-        /* إشعار */
         .toast {
             position: fixed;
             bottom: 100px;
@@ -333,9 +212,7 @@
             font-size: 0.9em;
             z-index: 200;
             animation: fadeInOut 3s ease forwards;
-            white-space: nowrap;
         }
-
         @keyframes fadeInOut {
             0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
             15% { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -343,80 +220,39 @@
             100% { opacity: 0; }
         }
 
-        /* شاشة التحميل */
-        .splash {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            background: var(--bg);
-        }
-
-        .splash .icon {
-            font-size: 4em;
-            animation: bounce 1s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-
-        .empty-state .icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-
         @media (min-width: 768px) {
-            .app-container {
-                max-width: 900px;
-                margin: 0 auto;
-            }
-            .stats-row {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .app-container { max-width: 900px; margin: 0 auto; }
+            .stats-row { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
 <body>
 
-    <!-- شاشة البداية -->
+    <!-- شاشة التحميل الأولية -->
     <div class="splash" id="splashScreen">
         <div class="icon">📚</div>
         <h2>فهرس المكتبة الوقفية</h2>
-        <p style="color:#888;margin-top:10px;">د. عبد الحفيظ العبدلاوي</p>
-        <p style="color:#aaa;font-size:0.8em;margin-top:20px;">🕌 وقف لله تعالى</p>
-        <p id="splashStatus" style="margin-top:15px;color:#666;">جاري تجهيز البيانات...</p>
+        <p>د. عبد الحفيظ العبدلاوي</p>
+        <p style="color:#aaa;font-size:0.8em;margin-top:5px;">🕌 وقف لله تعالى</p>
+        <div class="status" id="splashStatus">جاري تجهيز المكتبة...</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     </div>
 
-    <!-- التطبيق الرئيسي (مخفي في البداية) -->
+    <!-- التطبيق الرئيسي -->
     <div id="appMain" style="display:none;">
-        
-        <!-- Banner التثبيت -->
         <div class="install-banner" id="installBanner">
             <span>📲 ثبّت التطبيق للوصول دون إنترنت</span>
             <button onclick="installApp()">تثبيت</button>
         </div>
 
-        <!-- شريط علوي -->
         <div class="app-bar">
             <h1 id="appTitle">📚 المكتبة الوقفية</h1>
             <span class="badge">🕌 وقف</span>
         </div>
 
-        <!-- المحتوى -->
         <div class="main-content">
             <!-- صفحة الفهرس -->
             <div class="page active" id="pageCatalog">
-                <!-- إحصائيات -->
                 <div class="stats-row">
                     <div class="stat-card"><div class="number" id="statTotal">0</div><div class="label">📖 كتاب</div></div>
                     <div class="stat-card"><div class="number" id="statCats">0</div><div class="label">📂 تصنيف</div></div>
@@ -424,16 +260,12 @@
                     <div class="stat-card"><div class="number" id="statYear">-</div><div class="label">📅 أقدم</div></div>
                 </div>
 
-                <!-- بحث -->
                 <div class="search-bar">
                     <span class="icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، ناشر..." autocomplete="off">
                 </div>
 
-                <!-- تصنيفات -->
                 <div class="category-chips" id="categoryChips"></div>
-
-                <!-- النتائج -->
                 <div id="resultsInfo" style="text-align:center;color:#888;margin-bottom:10px;font-size:0.85em;"></div>
                 <div class="book-list" id="bookList"></div>
                 <div id="paginationContainer" style="text-align:center;margin-top:15px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
@@ -452,29 +284,24 @@
             </div>
         </div>
 
-        <!-- شريط التنقل السفلي -->
         <div class="bottom-nav">
-            <button class="active" onclick="switchTab('pageCatalog', this)">
-                <span class="icon">📚</span> الفهرس
-            </button>
-            <button onclick="switchTab('pageDonors', this)">
-                <span class="icon">🎁</span> المتبرعون
-            </button>
-            <button onclick="goToAdmin()">
-                <span class="icon">⚙️</span> إدارة
-            </button>
+            <button class="active" onclick="switchTab('pageCatalog', this)"><span class="icon">📚</span> الفهرس</button>
+            <button onclick="switchTab('pageDonors', this)"><span class="icon">🎁</span> المتبرعون</button>
+            <button onclick="window.location.href='admin.html'"><span class="icon">⚙️</span> إدارة</button>
         </div>
     </div>
 
     <script>
-        // ============ المتغيرات العامة ============
-        let DB = null;
+        // ============ إعدادات ============
+        const CSV_FILE_URL = 'فهرس المكتبة.csv';  // اسم الملف المرفوع مع التطبيق
         const DB_NAME = 'LibraryCatalog';
         const STORE_NAME = 'books';
         const PAGE_SIZE = 30;
-        let currentPage = 1;
+
+        let DB = null;
         let allBooks = [];
         let currentResults = [];
+        let currentPage = 1;
         let selectedCategory = '';
         let deferredPrompt = null;
 
@@ -482,118 +309,144 @@
         function openDatabase() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open(DB_NAME, 1);
-                
                 request.onupgradeneeded = (event) => {
                     const db = event.target.result;
                     if (!db.objectStoreNames.contains(STORE_NAME)) {
                         const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
                         store.createIndex('title', 'title', { unique: false });
                         store.createIndex('category', 'category', { unique: false });
-                        store.createIndex('donor', 'donor', { unique: false });
-                        store.createIndex('year', 'year', { unique: false });
                     }
                 };
-                
-                request.onsuccess = (event) => {
-                    DB = event.target.result;
-                    resolve(DB);
-                };
-                
-                request.onerror = (event) => {
-                    console.error('خطأ في فتح قاعدة البيانات:', event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
-
-        function getAllBooksFromDB() {
-            return new Promise((resolve, reject) => {
-                const transaction = DB.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.getAll();
-                
-                request.onsuccess = () => resolve(request.result || []);
-                request.onerror = () => reject(request.error);
+                request.onsuccess = (event) => resolve(event.target.result);
+                request.onerror = (event) => reject(event.target.error);
             });
         }
 
         function getBookCount() {
             return new Promise((resolve) => {
-                const transaction = DB.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.count();
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => resolve(0);
+                const tx = DB.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.count();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(0);
+            });
+        }
+
+        function getAllBooks() {
+            return new Promise((resolve) => {
+                const tx = DB.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => resolve([]);
             });
         }
 
         function saveBooksToDB(books) {
             return new Promise((resolve, reject) => {
-                const transaction = DB.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                // مسح البيانات القديمة أولاً
-                const clearRequest = store.clear();
-                clearRequest.onsuccess = () => {
-                    let count = 0;
-                    books.forEach((book, index) => {
-                        book.id = index + 1;
-                        store.add(book);
-                        count++;
-                    });
-                    
-                    transaction.oncomplete = () => resolve(count);
-                    transaction.onerror = () => reject(transaction.error);
-                };
-                clearRequest.onerror = () => reject(clearRequest.error);
+                const tx = DB.transaction(STORE_NAME, 'readwrite');
+                const store = tx.objectStore(STORE_NAME);
+                store.clear();
+                books.forEach((book, index) => {
+                    book.id = index + 1;
+                    store.add(book);
+                });
+                tx.oncomplete = () => resolve(books.length);
+                tx.onerror = () => reject(tx.error);
             });
         }
 
-        // ============ تحميل التطبيق ============
+        // ============ تحميل CSV ============
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+            if (lines.length < 2) throw new Error('الملف فارغ');
+            
+            const books = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length < 10) continue;
+                
+                books.push({
+                    title: (values[0] || '').trim(),
+                    author: (values[1] || '').trim(),
+                    investigator: (values[2] || 'بدون').trim(),
+                    publisher: (values[3] || '').trim(),
+                    category: (values[4] || '').trim(),
+                    volumes: (values[5] || 'بدون').trim(),
+                    edition: (values[6] || 'بدون').trim(),
+                    donor: (values[7] || '').trim(),
+                    year: (values[8] || '').trim(),
+                    copies: (values[9] || '1').trim()
+                });
+            }
+            return books;
+        }
+
+        async function fetchAndStoreCSV() {
+            const statusEl = document.getElementById('splashStatus');
+            const progressFill = document.getElementById('progressFill');
+            
+            statusEl.textContent = '📥 جاري تحميل ملف المكتبة من الخادم...';
+            progressFill.style.width = '20%';
+            
+            const response = await fetch(CSV_FILE_URL);
+            if (!response.ok) throw new Error('فشل تحميل ملف CSV');
+            
+            progressFill.style.width = '50%';
+            statusEl.textContent = '🔍 جاري تحليل البيانات...';
+            
+            const csvText = await response.text();
+            const books = parseCSV(csvText);
+            
+            progressFill.style.width = '80%';
+            statusEl.textContent = `💾 جاري تخزين ${books.length} كتاب...`;
+            
+            await saveBooksToDB(books);
+            
+            progressFill.style.width = '100%';
+            statusEl.textContent = '✅ تم تجهيز المكتبة بنجاح!';
+            
+            return books;
+        }
+
+        // ============ تهيئة التطبيق ============
         async function initApp() {
             try {
-                await openDatabase();
-                const count = await getBookCount();
+                DB = await openDatabase();
+                let count = await getBookCount();
                 
+                // إذا كانت قاعدة البيانات فارغة، نحمل من CSV
                 if (count === 0) {
-                    document.getElementById('splashStatus').textContent = '⚠️ لا توجد بيانات. سيتم توجيهك لصفحة الإدارة لتحميل ملف CSV.';
-                    setTimeout(() => {
-                        window.location.href = 'admin.html';
-                    }, 2000);
-                    return;
+                    allBooks = await fetchAndStoreCSV();
+                } else {
+                    document.getElementById('splashStatus').textContent = '📖 جاري قراءة المكتبة من الذاكرة المحلية...';
+                    document.getElementById('progressFill').style.width = '80%';
+                    allBooks = await getAllBooks();
+                    document.getElementById('progressFill').style.width = '100%';
                 }
                 
-                allBooks = await getAllBooksFromDB();
-                document.getElementById('splashScreen').style.display = 'none';
-                document.getElementById('appMain').style.display = 'block';
-                
-                renderApp();
+                // إظهار التطبيق
+                setTimeout(() => {
+                    document.getElementById('splashScreen').style.display = 'none';
+                    document.getElementById('appMain').style.display = 'block';
+                    renderApp();
+                }, 500);
                 
                 // تسجيل Service Worker
                 if ('serviceWorker' in navigator) {
-                    try {
-                        await navigator.serviceWorker.register('service-worker.js');
-                        console.log('✅ Service Worker مسجل');
-                    } catch (e) {
-                        console.log('⚠️ فشل تسجيل Service Worker:', e);
-                    }
+                    navigator.serviceWorker.register('service-worker.js');
                 }
                 
-                // الاستماع لحدث التثبيت
+                // حدث التثبيت
                 window.addEventListener('beforeinstallprompt', (e) => {
                     e.preventDefault();
                     deferredPrompt = e;
                     document.getElementById('installBanner').style.display = 'flex';
                 });
                 
-                window.addEventListener('appinstalled', () => {
-                    document.getElementById('installBanner').style.display = 'none';
-                    showToast('✅ تم تثبيت التطبيق بنجاح');
-                });
-                
             } catch (error) {
-                console.error('خطأ في التهيئة:', error);
-                document.getElementById('splashStatus').textContent = '❌ حدث خطأ. الرجاء تحديث الصفحة.';
+                console.error(error);
+                document.getElementById('splashStatus').textContent = '❌ فشل تحميل المكتبة. تأكد من اتصالك بالإنترنت ثم حدث الصفحة.';
             }
         }
 
@@ -606,34 +459,24 @@
         // ============ إحصائيات ============
         function updateStats() {
             document.getElementById('statTotal').textContent = allBooks.length.toLocaleString('ar-EG');
-            
             const cats = new Set(allBooks.map(b => b.category).filter(Boolean));
             document.getElementById('statCats').textContent = cats.size;
-            
             const donors = new Set(allBooks.map(b => b.donor).filter(d => d && d !== 'بدون'));
             document.getElementById('statDonors').textContent = donors.size;
-            
             const years = allBooks.map(b => parseInt(b.year)).filter(y => !isNaN(y) && y > 100);
             document.getElementById('statYear').textContent = years.length > 0 ? Math.min(...years) : '-';
-            
             document.getElementById('appTitle').textContent = `📚 ${allBooks.length.toLocaleString('ar-EG')} كتاب`;
         }
 
-        // ============ التصنيفات ============
         function renderCategories() {
             const cats = {};
-            allBooks.forEach(b => {
-                const c = b.category || 'غير مصنف';
-                cats[c] = (cats[c] || 0) + 1;
-            });
-            
+            allBooks.forEach(b => { const c = b.category || 'غير مصنف'; cats[c] = (cats[c] || 0) + 1; });
             const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
             
             let html = `<button class="chip ${selectedCategory === '' ? 'active' : ''}" onclick="selectCategory('')">الكل (${allBooks.length})</button>`;
             sorted.forEach(([cat, count]) => {
                 html += `<button class="chip ${selectedCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat.replace(/'/g, "\\'")}')">${cat} (${count})</button>`;
             });
-            
             document.getElementById('categoryChips').innerHTML = html;
         }
 
@@ -643,15 +486,10 @@
             document.getElementById('searchInput').value = '';
             renderCategories();
             applyFilters();
-            
-            // تمرير للأعلى على الموبايل
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ============ فلترة ============
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
             currentResults = allBooks.filter(book => {
                 const matchSearch = !searchTerm || 
                     (book.title || '').toLowerCase().includes(searchTerm) ||
@@ -659,28 +497,23 @@
                     (book.investigator || '').toLowerCase().includes(searchTerm) ||
                     (book.publisher || '').toLowerCase().includes(searchTerm) ||
                     (book.donor || '').toLowerCase().includes(searchTerm);
-                
                 const matchCategory = !selectedCategory || book.category === selectedCategory;
-                
                 return matchSearch && matchCategory;
             });
-            
             currentPage = 1;
             renderBooks();
             renderPagination();
         }
 
-        // ============ عرض الكتب ============
         function renderBooks() {
             const start = (currentPage - 1) * PAGE_SIZE;
             const end = start + PAGE_SIZE;
             const pageBooks = currentResults.slice(start, end);
             
-            const info = document.getElementById('resultsInfo');
-            info.textContent = `📋 عرض ${start + 1}-${Math.min(end, currentResults.length)} من ${currentResults.length} كتاب`;
+            document.getElementById('resultsInfo').textContent = 
+                `📋 عرض ${start + 1}-${Math.min(end, currentResults.length)} من ${currentResults.length} كتاب`;
             
             const container = document.getElementById('bookList');
-            
             if (pageBooks.length === 0) {
                 container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد كتب مطابقة</p></div>';
                 return;
@@ -703,18 +536,12 @@
         function renderPagination() {
             const totalPages = Math.ceil(currentResults.length / PAGE_SIZE);
             const container = document.getElementById('paginationContainer');
-            
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
-            
-            let html = '';
-            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">⬅️ السابق</button>`;
-            html += `<span style="padding:6px 12px;font-size:0.85em;">صفحة ${currentPage} من ${totalPages}</span>`;
-            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">التالي ➡️</button>`;
-            
-            container.innerHTML = html;
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
+            container.innerHTML = `
+                <button class="btn btn-outline" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">⬅️ السابق</button>
+                <span style="padding:6px 12px;">صفحة ${currentPage} من ${totalPages}</span>
+                <button class="btn btn-outline" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">التالي ➡️</button>
+            `;
         }
 
         function goToPage(page) {
@@ -726,13 +553,10 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ============ تفاصيل الكتاب ============
         function showDetail(id) {
             const book = allBooks.find(b => b.id === id);
             if (!book) return;
-            
-            const detailContent = document.getElementById('detailContent');
-            detailContent.innerHTML = `
+            document.getElementById('detailContent').innerHTML = `
                 <div class="detail-card">
                     <h2 style="color:var(--primary);margin-bottom:15px;">📖 ${book.title || '---'}</h2>
                     <div class="detail-row"><span class="detail-label">المؤلف</span><span class="detail-value">${book.author || '---'}</span></div>
@@ -746,11 +570,9 @@
                     <div class="detail-row"><span class="detail-label">عدد النسخ</span><span class="detail-value">${book.copies || '1'}</span></div>
                 </div>
             `;
-            
             goToPage('pageDetail');
         }
 
-        // ============ المتبرعين ============
         function renderDonors() {
             const donors = {};
             allBooks.forEach(b => {
@@ -758,9 +580,7 @@
                 if (d === 'بدون') return;
                 donors[d] = (donors[d] || 0) + 1;
             });
-            
             const sorted = Object.entries(donors).sort((a, b) => b[1] - a[1]);
-            
             document.getElementById('donorList').innerHTML = sorted.map(([name, count]) => `
                 <div class="book-card" onclick="filterByDonor('${name.replace(/'/g, "\\'")}')">
                     <div class="book-title">🎁 ${name}</div>
@@ -771,22 +591,17 @@
 
         function filterByDonor(donorName) {
             document.getElementById('searchInput').value = donorName;
-            document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value = '' : null;
             selectedCategory = '';
             renderCategories();
             applyFilters();
             switchTab('pageCatalog', document.querySelector('.bottom-nav button:first-child'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ============ التنقل ============
         function switchTab(pageId, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            
             document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
-            
             if (pageId === 'pageDonors') renderDonors();
         }
 
@@ -795,45 +610,37 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        function goToAdmin() {
-            window.location.href = 'admin.html';
-        }
-
-        // ============ التثبيت ============
         function installApp() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((result) => {
-                    if (result.outcome === 'accepted') {
-                        showToast('✅ جاري التثبيت...');
-                    }
+                    if (result.outcome === 'accepted') showToast('✅ تم التثبيت');
                     deferredPrompt = null;
                     document.getElementById('installBanner').style.display = 'none';
                 });
             } else {
-                showToast('ℹ️ التطبيق مثبت بالفعل أو غير متاح للتثبيت');
+                showToast('ℹ️ التطبيق مثبت بالفعل');
             }
         }
 
-        function showToast(message) {
+        function showToast(msg) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.textContent = message;
+            toast.textContent = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // ============ البحث المباشر ============
+        // ============ أحداث ============
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
-                let debounceTimer;
+                let timer;
                 searchInput.addEventListener('input', () => {
-                    clearTimeout(debounceTimer);
-                    debounceTimer = setTimeout(applyFilters, 300);
+                    clearTimeout(timer);
+                    timer = setTimeout(applyFilters, 300);
                 });
             }
-            
             initApp();
         });
     </script>
