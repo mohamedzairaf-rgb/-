@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة فهرس المكتبة | تحميل البيانات</title>
+    <style>
+        :root {
+            --primary: #1a4a3e;
+            --primary-light: #2c7a6d;
+            --bg: #f5f0eb;
+            --card: #ffffff;
+            --text: #2c1810;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .admin-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: right;
+            border-right: 4px solid var(--primary-light);
+        }
+
+        .status-box .label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .status-box .value {
+            color: #333;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary-light);
+            background: #f0faf7;
+        }
+
+        .upload-area .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 25px;
+            border: none;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            margin: 6px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-light);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.85em;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            font-size: 0.75em;
+            color: #aaa;
+        }
+
+        a {
+            color: var(--primary-light);
+            font-weight: bold;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-card">
+        <h1>⚙️ إدارة بيانات المكتبة</h1>
+        <p class="subtitle">قم برفع ملف CSV لتعبئة الفهرس</p>
+
+        <div class="status-box" id="statusBox">
+            <div class="label">📊 الحالة الحالية:</div>
+            <div class="value" id="dbStatus">جارٍ التحقق...</div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="icon">📂</div>
+            <p><strong>اختر ملف CSV</strong></p>
+            <p style="color:#888;font-size:0.85em;">فهرس المكتبة.csv</p>
+            <input type="file" id="fileInput" accept=".csv">
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+        <div class="progress-bar" id="progressContainer" style="display:none;">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="message" id="messageBox"></div>
+
+        <div>
+            <button class="btn btn-primary" id="processBtn" disabled>🔄 معالجة الملف وتخزينه</button>
+            <a href="index.html" class="btn btn-outline">📚 الذهاب للفهرس</a>
+        </div>
+
+        <p id="fileInfo" style="margin-top:12px; font-size:0.8em; color:#666;"></p>
+
+        <div class="footer-note">
+            🕌 وقف لله تعالى | مكتبة الدكتور عبد الحفيظ العبدلاوي
+        </div>
+    </div>
+
+    <script>
+        const DB_NAME = 'LibraryCatalog';
+        const STORE_NAME = 'books';
+        let selectedFile = null;
+
+        // فتح أو إنشاء قاعدة البيانات
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        store.createIndex('title', 'title', { unique: false });
+                        store.createIndex('category', 'category', { unique: false });
+                    }
+                };
+                
+                request.onsuccess = (event) => resolve(event.target.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // الحصول على عدد الكتب المخزنة
+        async function getBookCount() {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.count();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(0);
+            });
+        }
+
+        // عرض الحالة الحالية
+        async function refreshStatus() {
+            try {
+                const count = await getBookCount();
+                document.getElementById('dbStatus').textContent = 
+                    count > 0 ? `✅ ${count} كتاب مخزن في الذاكرة المحلية` : '⚠️ لا توجد بيانات (فارغة)';
+            } catch (e) {
+                document.getElementById('dbStatus').textContent = '❌ تعذر الوصول لقاعدة البيانات';
+            }
+        }
+
+        // تحليل CSV
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+            if (lines.length < 2) throw new Error('الملف فارغ أو لا يحتوي على بيانات كافية');
+            
+            // السطر الأول هو العنوان
+            const headers = lines[0].split(',').map(h => h.trim());
+            const books = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length < 10) continue; // تجاهل الأسطر الناقصة
+                
+                books.push({
+                    title: values[0]?.trim() || '',
+                    author: values[1]?.trim() || '',
+                    investigator: values[2]?.trim() || 'بدون',
+                    publisher: values[3]?.trim() || '',
+                    category: values[4]?.trim() || '',
+                    volumes: values[5]?.trim() || 'بدون',
+                    edition: values[6]?.trim() || 'بدون',
+                    donor: values[7]?.trim() || '',
+                    year: values[8]?.trim() || '',
+                    copies: values[9]?.trim() || '1'
+                });
+            }
+            
+            return books;
+        }
+
+        // تخزين الكتب في IndexedDB
+        async function storeBooks(books) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                const store = tx.objectStore(STORE_NAME);
+                
+                // مسح البيانات القديمة
+                const clearReq = store.clear();
+                clearReq.onsuccess = () => {
+                    let count = 0;
+                    books.forEach((book, index) => {
+                        book.id = index + 1;
+                        store.add(book);
+                        count++;
+                    });
+                    
+                    tx.oncomplete = () => resolve(count);
+                    tx.onerror = (e) => reject(e.target.error);
+                };
+                clearReq.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        // معالجة الملف المختار
+        async function processFile(file) {
+            const messageBox = document.getElementById('messageBox');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const spinner = document.getElementById('spinner');
+            
+            messageBox.className = 'message';
+            messageBox.style.display = 'none';
+            
+            try {
+                spinner.style.display = 'block';
+                progressContainer.style.display = 'block';
+                progressFill.style.width = '20%';
+                
+                // قراءة الملف
+                const text = await file.text();
+                progressFill.style.width = '40%';
+                
+                // تحليل CSV
+                const books = parseCSV(text);
+                progressFill.style.width = '70%';
+                
+                if (books.length === 0) {
+                    throw new Error('لم يتم العثور على أي كتاب صالح في الملف');
+                }
+                
+                // تخزين في قاعدة البيانات
+                const count = await storeBooks(books);
+                progressFill.style.width = '100%';
+                
+                spinner.style.display = 'none';
+                progressContainer.style.display = 'none';
+                
+                messageBox.className = 'message success';
+                messageBox.textContent = `✅ تم بنجاح تخزين ${count} كتاب في ذاكرة الجهاز. يمكنك الآن استخدام الفهرس بدون إنترنت.`;
+                messageBox.style.display = 'block';
+                
+                refreshStatus();
+                document.getElementById('processBtn').disabled = true;
+                document.getElementById('fileInfo').textContent = '';
+                
+            } catch (error) {
+                spinner.style.display = 'none';
+                progressContainer.style.display = 'none';
+                messageBox.className = 'message error';
+                messageBox.textContent = `❌ خطأ: ${error.message}`;
+                messageBox.style.display = 'block';
+                console.error(error);
+            }
+        }
+
+        // ربط الأحداث
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshStatus();
+            
+            const fileInput = document.getElementById('fileInput');
+            const processBtn = document.getElementById('processBtn');
+            const fileInfo = document.getElementById('fileInfo');
+            const uploadArea = document.getElementById('uploadArea');
+            
+            // اختيار ملف
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    selectedFile = e.target.files[0];
+                    fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
+                    processBtn.disabled = false;
+                }
+            });
+            
+            // الضغط على منطقة الرفع
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            // معالجة الملف
+            processBtn.addEventListener('click', () => {
+                if (selectedFile) {
+                    processFile(selectedFile);
+                }
+            });
+            
+            // دعم السحب والإفلات
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    selectedFile = e.dataTransfer.files[0];
+                    fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
+                    processBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
