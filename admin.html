@@ -27,7 +27,7 @@
             line-height: 1.6;
         }
 
-        .admin-card {
+        .card {
             background: var(--card);
             border-radius: 16px;
             padding: 24px;
@@ -37,17 +37,8 @@
             text-align: center;
         }
 
-        h1 {
-            color: var(--primary);
-            font-size: 1.5em;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: #777;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
+        h1 { color: var(--primary); font-size: 1.5em; margin-bottom: 8px; }
+        .subtitle { color: #777; font-size: 0.9em; margin-bottom: 20px; }
 
         .status-box {
             background: #f8f9fa;
@@ -57,18 +48,8 @@
             text-align: right;
             border-right: 4px solid var(--primary-light);
         }
-
-        .status-box .label {
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .status-box .value {
-            color: #333;
-            font-size: 0.9em;
-            word-break: break-all;
-        }
+        .status-box .label { font-weight: bold; color: var(--primary); margin-bottom: 5px; }
+        .status-box .value { color: #333; font-size: 0.9em; word-break: break-all; }
 
         .upload-area {
             border: 2px dashed #ccc;
@@ -79,25 +60,16 @@
             transition: 0.2s;
             position: relative;
         }
-
         .upload-area:hover, .upload-area.dragover {
             border-color: var(--primary-light);
             background: #f0faf7;
         }
-
-        .upload-area .icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-
+        .upload-area .icon { font-size: 3em; margin-bottom: 10px; }
         .upload-area input {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
         }
 
         .btn {
@@ -113,22 +85,9 @@
             margin: 6px;
             text-decoration: none;
         }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
 
         .progress-bar {
             background: #e9ecef;
@@ -137,7 +96,6 @@
             margin: 15px 0;
             overflow: hidden;
         }
-
         .progress-fill {
             height: 100%;
             background: var(--primary-light);
@@ -153,49 +111,66 @@
             font-size: 0.85em;
             display: none;
         }
+        .message.success { background: #d4edda; color: #155724; display: block; }
+        .message.error { background: #f8d7da; color: #721c24; display: block; }
 
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-
-        .footer-note {
-            margin-top: 25px;
-            font-size: 0.75em;
-            color: #aaa;
-        }
-
-        a {
-            color: var(--primary-light);
-            font-weight: bold;
-        }
+        .footer-note { margin-top: 25px; font-size: 0.75em; color: #aaa; }
+        a { color: var(--primary-light); font-weight: bold; }
 
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid var(--primary);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             animation: spin 0.8s linear infinite;
             margin: 10px auto;
             display: none;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* شاشة تسجيل الدخول */
+        .login-box {
+            text-align: center;
+        }
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1em;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+        .login-box input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+        .wrong-password {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 8px;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="admin-card">
+
+    <!-- ========== شاشة تسجيل الدخول ========== -->
+    <div class="card login-box" id="loginScreen">
+        <h1>🔐 دخول المشرف</h1>
+        <p class="subtitle">أدخل كلمة المرور للوصول إلى لوحة الإدارة</p>
+        <input type="password" id="passwordInput" placeholder="كلمة المرور" autocomplete="off">
+        <div class="wrong-password" id="wrongMsg">❌ كلمة المرور غير صحيحة</div>
+        <button class="btn btn-primary" onclick="checkPassword()">دخول</button>
+        <p style="margin-top:15px;"><a href="index.html">📚 العودة إلى الفهرس</a></p>
+    </div>
+
+    <!-- ========== لوحة الإدارة (مخفية بداية) ========== -->
+    <div class="card" id="adminPanel" style="display:none;">
         <h1>⚙️ إدارة بيانات المكتبة</h1>
         <p class="subtitle">قم برفع ملف CSV لتعبئة الفهرس</p>
 
@@ -230,9 +205,46 @@
     </div>
 
     <script>
+        // ==================== إعدادات الحماية ====================
+        // غيّر كلمة المرور هنا (يفضل أن تكون قوية وتحتوي على أرقام ورموز)
+        const ADMIN_PASSWORD = 'Zairaf@2026';   // <-- ضع كلمة المرور التي تريدها هنا
+        // =========================================================
+
         const DB_NAME = 'LibraryCatalog';
         const STORE_NAME = 'books';
         let selectedFile = null;
+
+        // التحقق من كلمة المرور
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const wrongMsg = document.getElementById('wrongMsg');
+            
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                refreshStatus();
+                // حفظ حالة الدخول في الجلسة (اختياري)
+                sessionStorage.setItem('admin_authenticated', 'true');
+            } else {
+                wrongMsg.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // السماح بالدخول التلقائي إذا كان المستخدم قد سجل دخوله مسبقاً في نفس الجلسة
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('admin_authenticated') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                refreshStatus();
+            }
+            
+            // دعم الضغط على Enter في حقل كلمة المرور
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPassword();
+            });
+        });
 
         // فتح أو إنشاء قاعدة البيانات
         function openDB() {
@@ -253,7 +265,6 @@
             });
         }
 
-        // الحصول على عدد الكتب المخزنة
         async function getBookCount() {
             const db = await openDB();
             return new Promise((resolve) => {
@@ -265,7 +276,6 @@
             });
         }
 
-        // عرض الحالة الحالية
         async function refreshStatus() {
             try {
                 const count = await getBookCount();
@@ -276,18 +286,15 @@
             }
         }
 
-        // تحليل CSV
         function parseCSV(text) {
             const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
             if (lines.length < 2) throw new Error('الملف فارغ أو لا يحتوي على بيانات كافية');
             
-            // السطر الأول هو العنوان
-            const headers = lines[0].split(',').map(h => h.trim());
             const books = [];
             
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].split(',');
-                if (values.length < 10) continue; // تجاهل الأسطر الناقصة
+                if (values.length < 10) continue;
                 
                 books.push({
                     title: values[0]?.trim() || '',
@@ -306,14 +313,12 @@
             return books;
         }
 
-        // تخزين الكتب في IndexedDB
         async function storeBooks(books) {
             const db = await openDB();
             return new Promise((resolve, reject) => {
                 const tx = db.transaction(STORE_NAME, 'readwrite');
                 const store = tx.objectStore(STORE_NAME);
                 
-                // مسح البيانات القديمة
                 const clearReq = store.clear();
                 clearReq.onsuccess = () => {
                     let count = 0;
@@ -330,7 +335,6 @@
             });
         }
 
-        // معالجة الملف المختار
         async function processFile(file) {
             const messageBox = document.getElementById('messageBox');
             const progressContainer = document.getElementById('progressContainer');
@@ -345,19 +349,14 @@
                 progressContainer.style.display = 'block';
                 progressFill.style.width = '20%';
                 
-                // قراءة الملف
                 const text = await file.text();
                 progressFill.style.width = '40%';
                 
-                // تحليل CSV
                 const books = parseCSV(text);
                 progressFill.style.width = '70%';
                 
-                if (books.length === 0) {
-                    throw new Error('لم يتم العثور على أي كتاب صالح في الملف');
-                }
+                if (books.length === 0) throw new Error('لم يتم العثور على أي كتاب صالح في الملف');
                 
-                // تخزين في قاعدة البيانات
                 const count = await storeBooks(books);
                 progressFill.style.width = '100%';
                 
@@ -382,54 +381,51 @@
             }
         }
 
-        // ربط الأحداث
         document.addEventListener('DOMContentLoaded', () => {
-            refreshStatus();
-            
             const fileInput = document.getElementById('fileInput');
             const processBtn = document.getElementById('processBtn');
             const fileInfo = document.getElementById('fileInfo');
             const uploadArea = document.getElementById('uploadArea');
             
-            // اختيار ملف
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    selectedFile = e.target.files[0];
-                    fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
-                    processBtn.disabled = false;
-                }
-            });
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        selectedFile = e.target.files[0];
+                        fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
+                        processBtn.disabled = false;
+                    }
+                });
+            }
             
-            // الضغط على منطقة الرفع
-            uploadArea.addEventListener('click', () => fileInput.click());
-            
-            // معالجة الملف
-            processBtn.addEventListener('click', () => {
-                if (selectedFile) {
-                    processFile(selectedFile);
-                }
-            });
-            
-            // دعم السحب والإفلات
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-            
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-            
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
+            if (uploadArea) {
+                uploadArea.addEventListener('click', () => fileInput.click());
                 
-                if (e.dataTransfer.files.length > 0) {
-                    selectedFile = e.dataTransfer.files[0];
-                    fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
-                    processBtn.disabled = false;
-                }
-            });
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    
+                    if (e.dataTransfer.files.length > 0) {
+                        selectedFile = e.dataTransfer.files[0];
+                        fileInfo.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} كيلوبايت)`;
+                        processBtn.disabled = false;
+                    }
+                });
+            }
+            
+            if (processBtn) {
+                processBtn.addEventListener('click', () => {
+                    if (selectedFile) processFile(selectedFile);
+                });
+            }
         });
     </script>
 </body>
