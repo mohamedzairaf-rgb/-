@@ -29,7 +29,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* شاشة الترحيب والتحميل */
         .splash {
             display: flex;
             flex-direction: column;
@@ -62,7 +61,6 @@
             transition: width 0.4s;
         }
 
-        /* التطبيق */
         .app-bar {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
@@ -220,6 +218,23 @@
             100% { opacity: 0; }
         }
 
+        /* صف أدوات pagination */
+        .pagination-toolbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .pagination-toolbar select {
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 0.8em;
+        }
+
         @media (min-width: 768px) {
             .app-container { max-width: 900px; margin: 0 auto; }
             .stats-row { grid-template-columns: repeat(4, 1fr); }
@@ -268,7 +283,7 @@
                 <div class="category-chips" id="categoryChips"></div>
                 <div id="resultsInfo" style="text-align:center;color:#888;margin-bottom:10px;font-size:0.85em;"></div>
                 <div class="book-list" id="bookList"></div>
-                <div id="paginationContainer" style="text-align:center;margin-top:15px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+                <div class="pagination-toolbar" id="paginationContainer"></div>
             </div>
 
             <!-- صفحة التفاصيل -->
@@ -293,15 +308,15 @@
 
     <script>
         // ============ إعدادات ============
-        const CSV_FILE_URL = 'فهرس المكتبة.csv';  // اسم الملف المرفوع مع التطبيق
+        const CSV_FILE_URL = 'فهرس المكتبة.csv';
         const DB_NAME = 'LibraryCatalog';
         const STORE_NAME = 'books';
-        const PAGE_SIZE = 30;
 
         let DB = null;
         let allBooks = [];
         let currentResults = [];
         let currentPage = 1;
+        let pageSize = 30;
         let selectedCategory = '';
         let deferredPrompt = null;
 
@@ -415,7 +430,6 @@
                 DB = await openDatabase();
                 let count = await getBookCount();
                 
-                // إذا كانت قاعدة البيانات فارغة، نحمل من CSV
                 if (count === 0) {
                     allBooks = await fetchAndStoreCSV();
                 } else {
@@ -425,19 +439,16 @@
                     document.getElementById('progressFill').style.width = '100%';
                 }
                 
-                // إظهار التطبيق
                 setTimeout(() => {
                     document.getElementById('splashScreen').style.display = 'none';
                     document.getElementById('appMain').style.display = 'block';
                     renderApp();
                 }, 500);
                 
-                // تسجيل Service Worker
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('service-worker.js');
                 }
                 
-                // حدث التثبيت
                 window.addEventListener('beforeinstallprompt', (e) => {
                     e.preventDefault();
                     deferredPrompt = e;
@@ -505,47 +516,92 @@
             renderPagination();
         }
 
+        // ========== دوال التأمين ==========
+        function esc(str) {
+            return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ============ عرض الكتب ============
         function renderBooks() {
-            const start = (currentPage - 1) * PAGE_SIZE;
-            const end = start + PAGE_SIZE;
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
             const pageBooks = currentResults.slice(start, end);
-            
+
             document.getElementById('resultsInfo').textContent = 
                 `📋 عرض ${start + 1}-${Math.min(end, currentResults.length)} من ${currentResults.length} كتاب`;
-            
+
             const container = document.getElementById('bookList');
+            
             if (pageBooks.length === 0) {
                 container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد كتب مطابقة</p></div>';
                 return;
             }
-            
-            container.innerHTML = pageBooks.map(book => `
-                <div class="book-card" onclick="showDetail(${book.id})">
-                    <div class="book-title">${book.title || '---'}</div>
-                    <div class="book-meta">
-                        <span>✍️ ${book.author || '---'}</span>
-                        ${book.publisher ? `<span>🏢 ${book.publisher.substring(0, 25)}</span>` : ''}
-                        ${book.year ? `<span>📅 ${book.year}</span>` : ''}
-                        ${book.category ? `<span>📂 ${book.category}</span>` : ''}
-                    </div>
-                    ${book.donor && book.donor !== 'بدون' ? `<div class="donor">🎁 ${book.donor}</div>` : ''}
-                </div>
-            `).join('');
+
+            let html = '';
+            for (let i = 0; i < pageBooks.length; i++) {
+                const book = pageBooks[i];
+                if (!book || !book.id) continue;
+                try {
+                    html += `
+                        <div class="book-card" onclick="showDetail(${book.id})">
+                            <div class="book-title">${esc(book.title)}</div>
+                            <div class="book-meta">
+                                <span>✍️ ${esc(book.author)}</span>
+                                ${book.publisher ? '<span>🏢 ' + esc(book.publisher).substring(0, 25) + '</span>' : ''}
+                                ${book.year ? '<span>📅 ' + esc(book.year) + '</span>' : ''}
+                                ${book.category ? '<span>📂 ' + esc(book.category) + '</span>' : ''}
+                            </div>
+                            ${book.donor && book.donor !== 'بدون' ? '<div class="donor">🎁 ' + esc(book.donor) + '</div>' : ''}
+                        </div>
+                    `;
+                } catch (e) {
+                    console.warn('خطأ في عرض كتاب رقم ' + book.id, e);
+                }
+            }
+            container.innerHTML = html;
         }
 
+        // ============ ترقيم الصفحات ============
         function renderPagination() {
-            const totalPages = Math.ceil(currentResults.length / PAGE_SIZE);
+            const totalPages = Math.ceil(currentResults.length / pageSize);
             const container = document.getElementById('paginationContainer');
-            if (totalPages <= 1) { container.innerHTML = ''; return; }
-            container.innerHTML = `
-                <button class="btn btn-outline" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">⬅️ السابق</button>
-                <span style="padding:6px 12px;">صفحة ${currentPage} من ${totalPages}</span>
-                <button class="btn btn-outline" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">التالي ➡️</button>
+            
+            if (totalPages <= 1 && pageSize >= currentResults.length) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">⬅️ السابق</button>`;
+            html += `<span style="padding:6px 12px;font-size:0.85em;">صفحة ${currentPage} من ${totalPages}</span>`;
+            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">التالي ➡️</button>`;
+
+            // إضافة محدد عدد الكتب في الصفحة
+            html += `
+                <select id="pageSizeSelect" onchange="changePageSize()" style="font-size:0.8em;padding:6px 10px;margin-right:10px;">
+                    <option value="30" ${pageSize === 30 ? 'selected' : ''}>30 في الصفحة</option>
+                    <option value="50" ${pageSize === 50 ? 'selected' : ''}>50 في الصفحة</option>
+                    <option value="70" ${pageSize === 70 ? 'selected' : ''}>70 في الصفحة</option>
+                    <option value="100" ${pageSize === 100 ? 'selected' : ''}>100 في الصفحة</option>
+                </select>
             `;
+
+            container.innerHTML = html;
+        }
+
+        function changePageSize() {
+            const select = document.getElementById('pageSizeSelect');
+            if (select) {
+                pageSize = parseInt(select.value, 10);
+                currentPage = 1;
+                renderBooks();
+                renderPagination();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         function goToPage(page) {
-            const totalPages = Math.ceil(currentResults.length / PAGE_SIZE);
+            const totalPages = Math.ceil(currentResults.length / pageSize);
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             renderBooks();
@@ -553,26 +609,30 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ============ تفاصيل الكتاب ============
         function showDetail(id) {
             const book = allBooks.find(b => b.id === id);
             if (!book) return;
+            
             document.getElementById('detailContent').innerHTML = `
                 <div class="detail-card">
-                    <h2 style="color:var(--primary);margin-bottom:15px;">📖 ${book.title || '---'}</h2>
-                    <div class="detail-row"><span class="detail-label">المؤلف</span><span class="detail-value">${book.author || '---'}</span></div>
-                    <div class="detail-row"><span class="detail-label">المحقق / المترجم</span><span class="detail-value">${book.investigator || 'بدون'}</span></div>
-                    <div class="detail-row"><span class="detail-label">دار النشر</span><span class="detail-value">${book.publisher || '---'}</span></div>
-                    <div class="detail-row"><span class="detail-label">التصنيف</span><span class="detail-value">${book.category || '---'}</span></div>
-                    <div class="detail-row"><span class="detail-label">عدد المجلدات</span><span class="detail-value">${book.volumes || 'بدون'}</span></div>
-                    <div class="detail-row"><span class="detail-label">رقم الطبعة</span><span class="detail-value">${book.edition || 'بدون'}</span></div>
-                    <div class="detail-row"><span class="detail-label">المتبرع</span><span class="detail-value" style="color:var(--primary-light);">🎁 ${book.donor || '---'}</span></div>
-                    <div class="detail-row"><span class="detail-label">سنة النشر</span><span class="detail-value">${book.year || '---'}</span></div>
-                    <div class="detail-row"><span class="detail-label">عدد النسخ</span><span class="detail-value">${book.copies || '1'}</span></div>
+                    <h2 style="color:var(--primary);margin-bottom:15px;">📖 ${esc(book.title)}</h2>
+                    <div class="detail-row"><span class="detail-label">المؤلف</span><span class="detail-value">${esc(book.author)}</span></div>
+                    <div class="detail-row"><span class="detail-label">المحقق / المترجم</span><span class="detail-value">${esc(book.investigator)}</span></div>
+                    <div class="detail-row"><span class="detail-label">دار النشر</span><span class="detail-value">${esc(book.publisher)}</span></div>
+                    <div class="detail-row"><span class="detail-label">التصنيف</span><span class="detail-value">${esc(book.category)}</span></div>
+                    <div class="detail-row"><span class="detail-label">عدد المجلدات</span><span class="detail-value">${esc(book.volumes)}</span></div>
+                    <div class="detail-row"><span class="detail-label">رقم الطبعة</span><span class="detail-value">${esc(book.edition)}</span></div>
+                    <div class="detail-row"><span class="detail-label">المتبرع</span><span class="detail-value" style="color:var(--primary-light);">🎁 ${esc(book.donor)}</span></div>
+                    <div class="detail-row"><span class="detail-label">سنة النشر</span><span class="detail-value">${esc(book.year)}</span></div>
+                    <div class="detail-row"><span class="detail-label">عدد النسخ</span><span class="detail-value">${esc(book.copies)}</span></div>
                 </div>
             `;
+            
             goToPage('pageDetail');
         }
 
+        // ============ المتبرعين ============
         function renderDonors() {
             const donors = {};
             allBooks.forEach(b => {
