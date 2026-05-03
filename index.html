@@ -42,19 +42,47 @@
         .stat-card { background: var(--card); padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-right: 3px solid var(--primary-light); }
         .stat-card .number { font-size: 1.6em; font-weight: bold; color: var(--primary); }
         .stat-card .label { font-size: 0.75em; color: #888; margin-top: 3px; }
-        .search-bar { background: var(--card); border-radius: 25px; display: flex; align-items: center; padding: 8px 16px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-        .search-bar input { flex: 1; border: none; font-size: 16px; padding: 8px; background: transparent; font-family: inherit; }
+
+        /* شريط البحث مع القائمة المنسدلة */
+        .search-bar {
+            background: var(--card);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+        }
+        .search-bar input {
+            flex: 2;
+            min-width: 160px;
+            border: none;
+            font-size: 16px;
+            padding: 8px;
+            background: transparent;
+            font-family: inherit;
+        }
         .search-bar input:focus { outline: none; }
-        .search-bar .icon { font-size: 1.3em; opacity: 0.5; margin-left: 5px; }
+        .search-bar select {
+            flex: 1;
+            min-width: 110px;
+            padding: 8px 6px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.9em;
+            background: white;
+            cursor: pointer;
+        }
+        .search-bar .icon { font-size: 1.3em; opacity: 0.5; margin: 0 4px; }
+
         .category-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; max-height: 130px; overflow-y: auto; }
         .chip { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-family: inherit; }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
         .book-list { display: flex; flex-direction: column; gap: 8px; }
-        .book-card {
-            background: var(--card); border-radius: 10px; padding: 14px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04); cursor: pointer;
-            border-right: 3px solid transparent; transition: 0.2s;
-        }
+        .book-card { background: var(--card); border-radius: 10px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); cursor: pointer; border-right: 3px solid transparent; transition: 0.2s; }
         .book-card:hover, .book-card:active { border-right-color: var(--primary-light); background: #fafffe; }
         .book-card .book-title { font-weight: bold; font-size: 0.95em; margin-bottom: 6px; color: var(--primary); }
         .book-card .book-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.75em; color: #666; }
@@ -93,10 +121,22 @@
                     <div class="stat-card"><div class="number" id="statDonors">0</div><div class="label">🎁 متبرع</div></div>
                     <div class="stat-card"><div class="number" id="statYear">-</div><div class="label">📅 أقدم</div></div>
                 </div>
+
+                <!-- شريط البحث مع القائمة المنسدلة -->
                 <div class="search-bar">
                     <span class="icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="ابحث عن أي شيء (العنوان، المؤلف، الناشر...) واهم الهمزات">
+                    <input type="text" id="searchInput" placeholder="اكتب كلمة البحث..." autocomplete="off">
+                    <select id="searchField">
+                        <option value="all">الكل</option>
+                        <option value="title">العنوان</option>
+                        <option value="author">المؤلف</option>
+                        <option value="publisher">دار النشر</option>
+                        <option value="investigator">المحقق</option>
+                        <option value="category">التصنيف</option>
+                        <option value="donor">المتبرع</option>
+                    </select>
                 </div>
+
                 <div class="category-chips" id="categoryChips"></div>
                 <div id="resultsInfo" style="text-align:center;color:#888;margin-bottom:10px;font-size:0.85em;"></div>
                 <div class="book-list" id="bookList"></div>
@@ -123,9 +163,9 @@
         const STORE_NAME = 'books';
 
         let DB, allBooks = [], selectedCategory = '', deferredPrompt;
-        let bookElems = []; // لتخزين عناصر DOM للكتب للفلترة الحية
+        let bookElems = []; // عناصر DOM للكتب
 
-        // ---- دوال IndexedDB ----
+        // ---- IndexedDB ----
         function openDB() {
             return new Promise((resolve, reject) => {
                 const r = indexedDB.open(DB_NAME, 1);
@@ -162,7 +202,7 @@
             });
         }
 
-        // ---- تحليل CSV مع تجاهل الفواصل داخل علامات التنصيص ----
+        // ---- تحليل CSV متقدم (يتجاهل الفواصل داخل النصوص) ----
         function parseCSV(text) {
             const lines = text.split(/\r?\n/).filter(l => l.trim());
             if (lines.length < 2) throw new Error('ملف فارغ');
@@ -201,7 +241,7 @@
                 .replace(/[ةه]/g, 'ه')
                 .replace(/[ؤ]/g, 'و')
                 .replace(/[ئ]/g, 'ي')
-                .replace(/[ًٌٍَُِّْ]/g, '') // تشكيل
+                .replace(/[ًٌٍَُِّْ]/g, '')
                 .trim();
         }
 
@@ -251,7 +291,7 @@
             }
         }
 
-        // ---- بناء الواجهة (قائمة الكتب مرة واحدة) ----
+        // ---- بناء واجهة الكتب (مرة واحدة) ----
         function buildUI() {
             updateStats();
             renderCategories();
@@ -311,9 +351,11 @@
             applyFilters();
         }
 
-        // ---- فلترة حية (تطابق نصي مع تجاهل الهمزات) ----
+        // ---- فلترة حية (تبحث في الحقل المحدد أو كل الحقول) ----
         function applyFilters() {
-            const searchTerm = normalizeArabic(document.getElementById('searchInput').value.trim());
+            const rawSearch = document.getElementById('searchInput').value.trim();
+            const searchTerm = normalizeArabic(rawSearch);
+            const field = document.getElementById('searchField').value;
             let visibleCount = 0;
 
             for (const item of bookElems) {
@@ -323,18 +365,22 @@
                     elem.classList.add('hidden');
                     continue;
                 }
-                // فلتر النص
+                // إذا لم يكن هناك نص بحث
                 if (!searchTerm) {
                     elem.classList.remove('hidden');
                     visibleCount++;
                     continue;
                 }
-                // تجميع كل الحقول القابلة للبحث
-                const haystack = normalizeArabic([
-                    book.title, book.author, book.investigator,
-                    book.publisher, book.category, book.donor, book.year
-                ].join(' '));
-                if (haystack.includes(searchTerm)) {
+
+                // تحديد الحقل المطلوب
+                let fieldValue = '';
+                if (field === 'all') {
+                    fieldValue = [book.title, book.author, book.investigator, book.publisher, book.category, book.donor, book.year].join(' ');
+                } else {
+                    fieldValue = book[field] || '';
+                }
+
+                if (normalizeArabic(fieldValue).includes(searchTerm)) {
                     elem.classList.remove('hidden');
                     visibleCount++;
                 } else {
@@ -342,8 +388,8 @@
                 }
             }
 
-            document.getElementById('resultsInfo').textContent = 
-                searchTerm || selectedCategory ? `🔍 ${visibleCount} كتاب مطابق` : `${allBooks.length} كتاب`;
+            document.getElementById('resultsInfo').textContent =
+                (searchTerm || selectedCategory) ? `🔍 ${visibleCount} كتاب مطابق` : `${allBooks.length} كتاب`;
         }
 
         // ---- تفاصيل الكتاب ----
@@ -379,6 +425,7 @@
 
         function filterByDonor(name) {
             document.getElementById('searchInput').value = name;
+            document.getElementById('searchField').value = 'donor';
             selectedCategory = '';
             renderCategories();
             applyFilters();
@@ -413,6 +460,7 @@
         // ---- ربط الأحداث ----
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('searchField').addEventListener('change', applyFilters);
             initApp();
         });
     </script>
