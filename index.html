@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a4a3e">
-    <meta name="description" content="فهرس المكتبة الوقفية للدكتور عبد الحفيظ العبدلاوي">
     <title>📚 فهرس المكتبة الوقفية | د. عبد الحفيظ العبدلاوي</title>
     <link rel="manifest" href="manifest.json">
-    
     <style>
         :root {
             --primary: #1a4a3e;
@@ -18,230 +16,61 @@
             --text: #2c1810;
             --border: #e0d5c7;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Traditional Arabic', Tahoma, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background: var(--bg); color: var(--text); line-height: 1.6;
             -webkit-tap-highlight-color: transparent;
         }
-
-        .splash {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            background: var(--bg);
-            padding: 20px;
-        }
+        .splash { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; background: var(--bg); padding: 20px; }
         .splash .icon { font-size: 4em; animation: bounce 1s infinite; }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .splash h2 { color: var(--primary); margin: 10px 0; }
         .splash .status { color: #888; margin-top: 20px; font-size: 0.95em; }
-        .splash .progress-bar {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 10px;
-            width: 220px;
-            margin: 15px auto;
-            overflow: hidden;
-        }
-        .splash .progress-fill {
-            height: 100%;
-            background: var(--primary-light);
-            width: 0%;
-            transition: width 0.4s;
-        }
-
-        .app-bar {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 12px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
+        .splash .progress-bar { background: #e9ecef; border-radius: 10px; height: 10px; width: 220px; margin: 15px auto; overflow: hidden; }
+        .splash .progress-fill { height: 100%; background: var(--primary-light); width: 0%; transition: width 0.4s; }
+        .app-bar { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .app-bar h1 { font-size: 1.1em; }
         .app-bar .badge { background: var(--accent); color: #000; padding: 4px 12px; border-radius: 15px; font-size: 0.75em; font-weight: bold; }
-
-        .bottom-nav {
-            background: white;
-            display: flex;
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-        .bottom-nav button {
-            flex: 1;
-            padding: 10px 5px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-size: 0.75em;
-            color: #888;
-            font-family: inherit;
-        }
+        .bottom-nav { background: white; display: flex; position: sticky; bottom: 0; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .bottom-nav button { flex: 1; padding: 10px 5px; border: none; background: transparent; cursor: pointer; font-size: 0.75em; color: #888; font-family: inherit; }
         .bottom-nav button.active { color: var(--primary); font-weight: bold; border-top: 2px solid var(--primary); }
         .bottom-nav button .icon { display: block; font-size: 1.5em; margin-bottom: 2px; }
-
         .main-content { padding: 12px; padding-bottom: 80px; }
-
-        .page { display: none; }
-        .page.active { display: block; }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .stat-card {
-            background: var(--card);
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            border-right: 3px solid var(--primary-light);
-        }
+        .page { display: none; } .page.active { display: block; }
+        .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: var(--card); padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-right: 3px solid var(--primary-light); }
         .stat-card .number { font-size: 1.6em; font-weight: bold; color: var(--primary); }
         .stat-card .label { font-size: 0.75em; color: #888; margin-top: 3px; }
-
-        .search-bar {
-            background: var(--card);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            padding: 8px 16px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
+        .search-bar { background: var(--card); border-radius: 25px; display: flex; align-items: center; padding: 8px 16px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
         .search-bar input { flex: 1; border: none; font-size: 16px; padding: 8px; background: transparent; font-family: inherit; }
         .search-bar input:focus { outline: none; }
         .search-bar .icon { font-size: 1.3em; opacity: 0.5; margin-left: 5px; }
-
-        .category-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-            max-height: 130px;
-            overflow-y: auto;
-        }
-        .chip {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1.5px solid var(--border);
-            background: white;
-            cursor: pointer;
-            font-size: 0.8em;
-            white-space: nowrap;
-            font-family: inherit;
-        }
+        .category-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; max-height: 130px; overflow-y: auto; }
+        .chip { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-family: inherit; }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         .book-list { display: flex; flex-direction: column; gap: 8px; }
-        .book-card {
-            background: var(--card);
-            border-radius: 10px;
-            padding: 14px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-            cursor: pointer;
-            border-right: 3px solid transparent;
-            transition: 0.2s;
-        }
+        .book-card { background: var(--card); border-radius: 10px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); cursor: pointer; border-right: 3px solid transparent; transition: 0.2s; }
         .book-card:hover, .book-card:active { border-right-color: var(--primary-light); background: #fafffe; }
         .book-card .book-title { font-weight: bold; font-size: 0.95em; margin-bottom: 6px; color: var(--primary); }
         .book-card .book-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.75em; color: #666; }
         .book-card .book-meta span { background: #f0f0f0; padding: 3px 8px; border-radius: 10px; }
         .book-card .donor { margin-top: 8px; font-size: 0.7em; color: var(--primary-light); font-weight: bold; }
-
         .detail-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-        .detail-label { color: #888; font-size: 0.85em; }
-        .detail-value { font-weight: bold; text-align: left; }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9em;
-        }
-        .btn-primary { background: var(--primary); color: white; }
+        .detail-label { color: #888; font-size: 0.85em; } .detail-value { font-weight: bold; text-align: left; }
+        .btn { padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-family: inherit; font-size: 0.9em; }
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-
         .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
         .empty-state .icon { font-size: 3em; margin-bottom: 10px; }
-
-        .install-banner {
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin: 10px;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .install-banner button { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; font-family: inherit; white-space: nowrap; }
-
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 0.9em;
-            z-index: 200;
-            animation: fadeInOut 3s ease forwards;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            85% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        .pagination-toolbar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-        .pagination-toolbar select {
-            padding: 6px 12px;
-            border-radius: 15px;
-            border: 1px solid #ccc;
-            font-family: inherit;
-            font-size: 0.8em;
-        }
-
-        @media (min-width: 768px) {
-            .app-container { max-width: 900px; margin: 0 auto; }
-            .stats-row { grid-template-columns: repeat(4, 1fr); }
-        }
+        .install-banner { background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 12px 16px; border-radius: 10px; margin: 10px; display: none; align-items: center; justify-content: space-between; }
+        .install-banner button { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; font-family: inherit; }
+        .pagination-toolbar { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .pagination-toolbar select { padding: 6px 12px; border-radius: 15px; border: 1px solid #ccc; font-family: inherit; font-size: 0.8em; }
+        @media (min-width: 768px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
     </style>
 </head>
 <body>
-
     <div class="splash" id="splashScreen">
         <div class="icon">📚</div>
         <h2>فهرس المكتبة الوقفية</h2>
@@ -252,16 +81,8 @@
     </div>
 
     <div id="appMain" style="display:none;">
-        <div class="install-banner" id="installBanner">
-            <span>📲 ثبّت التطبيق للوصول دون إنترنت</span>
-            <button onclick="installApp()">تثبيت</button>
-        </div>
-
-        <div class="app-bar">
-            <h1 id="appTitle">📚 المكتبة الوقفية</h1>
-            <span class="badge">🕌 وقف</span>
-        </div>
-
+        <div class="install-banner" id="installBanner"><span>📲 ثبّت التطبيق للوصول دون إنترنت</span><button onclick="installApp()">تثبيت</button></div>
+        <div class="app-bar"><h1 id="appTitle">📚 المكتبة الوقفية</h1><span class="badge">🕌 وقف</span></div>
         <div class="main-content">
             <div class="page active" id="pageCatalog">
                 <div class="stats-row">
@@ -270,29 +91,21 @@
                     <div class="stat-card"><div class="number" id="statDonors">0</div><div class="label">🎁 متبرع</div></div>
                     <div class="stat-card"><div class="number" id="statYear">-</div><div class="label">📅 أقدم</div></div>
                 </div>
-
-                <div class="search-bar">
-                    <span class="icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، ناشر..." autocomplete="off">
-                </div>
-
+                <div class="search-bar"><span class="icon">🔍</span><input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، ناشر..." autocomplete="off"></div>
                 <div class="category-chips" id="categoryChips"></div>
                 <div id="resultsInfo" style="text-align:center;color:#888;margin-bottom:10px;font-size:0.85em;"></div>
                 <div class="book-list" id="bookList"></div>
                 <div class="pagination-toolbar" id="paginationContainer"></div>
             </div>
-
             <div class="page" id="pageDetail">
                 <button class="btn btn-outline" onclick="goToPage('pageCatalog')" style="margin-bottom:15px;">⬅️ رجوع للقائمة</button>
                 <div id="detailContent"></div>
             </div>
-
             <div class="page" id="pageDonors">
                 <h3 style="margin-bottom:15px;">🎁 المتبرعون - جزاهم الله خيراً</h3>
                 <div class="book-list" id="donorList"></div>
             </div>
         </div>
-
         <div class="bottom-nav">
             <button class="active" onclick="switchTab('pageCatalog', this)"><span class="icon">📚</span> الفهرس</button>
             <button onclick="switchTab('pageDonors', this)"><span class="icon">🎁</span> المتبرعون</button>
@@ -305,374 +118,235 @@
         const DB_NAME = 'LibraryCatalog';
         const STORE_NAME = 'books';
 
-        let DB = null;
-        let allBooks = [];
-        let currentResults = [];
-        let currentPage = 1;
-        let pageSize = 30;
-        let selectedCategory = '';
-        let deferredPrompt = null;
+        let DB, allBooks=[], currentResults=[], currentPage=1, pageSize=30, selectedCategory='', deferredPrompt;
 
-        function openDatabase() {
+        function openDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 1);
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                        store.createIndex('title', 'title', { unique: false });
-                        store.createIndex('category', 'category', { unique: false });
+                const r = indexedDB.open(DB_NAME,1);
+                r.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if(!db.objectStoreNames.contains(STORE_NAME)) {
+                        const s = db.createObjectStore(STORE_NAME,{keyPath:'id',autoIncrement:true});
+                        s.createIndex('title','title',{unique:false});
+                        s.createIndex('category','category',{unique:false});
                     }
                 };
-                request.onsuccess = (event) => resolve(event.target.result);
-                request.onerror = (event) => reject(event.target.error);
+                r.onsuccess= e => resolve(e.target.result);
+                r.onerror= e => reject(e.target.error);
             });
         }
 
-        function getBookCount() {
-            return new Promise((resolve) => {
-                const tx = DB.transaction(STORE_NAME, 'readonly');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.count();
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => resolve(0);
+        function getCount() {
+            return new Promise(res => {
+                const tx = DB.transaction(STORE_NAME,'readonly');
+                tx.objectStore(STORE_NAME).count().onsuccess = e => res(e.target.result);
             });
         }
 
-        function getAllBooks() {
-            return new Promise((resolve) => {
-                const tx = DB.transaction(STORE_NAME, 'readonly');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.getAll();
-                req.onsuccess = () => resolve(req.result || []);
-                req.onerror = () => resolve([]);
+        function getAll() {
+            return new Promise(res => {
+                DB.transaction(STORE_NAME,'readonly').objectStore(STORE_NAME).getAll().onsuccess = e => res(e.target.result||[]);
             });
         }
 
-        function saveBooksToDB(books) {
+        function saveAll(books) {
             return new Promise((resolve, reject) => {
-                const tx = DB.transaction(STORE_NAME, 'readwrite');
+                const tx = DB.transaction(STORE_NAME,'readwrite');
                 const store = tx.objectStore(STORE_NAME);
                 store.clear();
-                books.forEach((book, index) => {
-                    book.id = index + 1;
-                    store.add(book);
-                });
-                tx.oncomplete = () => resolve(books.length);
-                tx.onerror = () => reject(tx.error);
+                books.forEach((b,i)=>{ b.id=i+1; store.add(b); });
+                tx.oncomplete=()=>resolve(books.length);
+                tx.onerror=()=>reject(tx.error);
             });
         }
 
-        function parseCSV(text) {
+        // دالة تحليل CSV محسّنة تتعامل مع الفواصل داخل علامات التنصيص
+        function parseCSVImproved(text) {
             const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
             if (lines.length < 2) throw new Error('الملف فارغ');
             const books = [];
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',');
-                if (values.length < 10) continue;
+                const line = lines[i];
+                const fields = [];
+                let current = '';
+                let inQuotes = false;
+                for (let j = 0; j < line.length; j++) {
+                    const ch = line[j];
+                    if (ch === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (ch === ',' && !inQuotes) {
+                        fields.push(current.trim());
+                        current = '';
+                    } else {
+                        current += ch;
+                    }
+                }
+                fields.push(current.trim());
+                if (fields.length < 10) continue;
                 books.push({
-                    title: (values[0] || '').trim(),
-                    author: (values[1] || '').trim(),
-                    investigator: (values[2] || 'بدون').trim(),
-                    publisher: (values[3] || '').trim(),
-                    category: (values[4] || '').trim(),
-                    volumes: (values[5] || 'بدون').trim(),
-                    edition: (values[6] || 'بدون').trim(),
-                    donor: (values[7] || '').trim(),
-                    year: (values[8] || '').trim(),
-                    copies: (values[9] || '1').trim()
+                    title: fields[0] || '',
+                    author: fields[1] || '',
+                    investigator: fields[2] || 'بدون',
+                    publisher: fields[3] || '',
+                    category: fields[4] || '',
+                    volumes: fields[5] || 'بدون',
+                    edition: fields[6] || 'بدون',
+                    donor: fields[7] || '',
+                    year: fields[8] || '',
+                    copies: fields[9] || '1'
                 });
             }
             return books;
         }
 
-        async function fetchAndStoreCSV() {
-            const statusEl = document.getElementById('splashStatus');
-            const progressFill = document.getElementById('progressFill');
-            statusEl.textContent = '📥 جاري تحميل ملف المكتبة من الخادم...';
-            progressFill.style.width = '20%';
-            const response = await fetch(CSV_FILE_URL);
-            if (!response.ok) throw new Error('فشل تحميل ملف CSV');
-            progressFill.style.width = '50%';
-            statusEl.textContent = '🔍 جاري تحليل البيانات...';
-            const csvText = await response.text();
-            const books = parseCSV(csvText);
-            progressFill.style.width = '80%';
-            statusEl.textContent = `💾 جاري تخزين ${books.length} كتاب...`;
-            await saveBooksToDB(books);
-            progressFill.style.width = '100%';
-            statusEl.textContent = '✅ تم تجهيز المكتبة بنجاح!';
+        async function fetchAndStore() {
+            const status = document.getElementById('splashStatus');
+            const fill = document.getElementById('progressFill');
+            status.textContent = '📥 جاري تحميل ملف المكتبة...';
+            fill.style.width = '20%';
+            const resp = await fetch(CSV_FILE_URL);
+            if (!resp.ok) throw new Error('فشل التحميل');
+            fill.style.width = '50%';
+            status.textContent = '🔍 جاري تحليل البيانات (معالجة الفواصل)...';
+            const text = await resp.text();
+            const books = parseCSVImproved(text);
+            fill.style.width = '80%';
+            status.textContent = `💾 تخزين ${books.length} كتاب...`;
+            await saveAll(books);
+            fill.style.width = '100%';
+            status.textContent = '✅ تم بنجاح!';
             return books;
         }
 
-        async function initApp() {
+        async function init() {
             try {
-                DB = await openDatabase();
-                let count = await getBookCount();
+                DB = await openDB();
+                let count = await getCount();
                 if (count === 0) {
-                    allBooks = await fetchAndStoreCSV();
+                    allBooks = await fetchAndStore();
                 } else {
-                    document.getElementById('splashStatus').textContent = '📖 جاري قراءة المكتبة من الذاكرة المحلية...';
-                    document.getElementById('progressFill').style.width = '80%';
-                    allBooks = await getAllBooks();
-                    document.getElementById('progressFill').style.width = '100%';
+                    document.getElementById('splashStatus').textContent = '📖 قراءة من الذاكرة...';
+                    allBooks = await getAll();
                 }
                 setTimeout(() => {
-                    document.getElementById('splashScreen').style.display = 'none';
-                    document.getElementById('appMain').style.display = 'block';
-                    renderApp();
-                }, 500);
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('service-worker.js');
-                }
-                window.addEventListener('beforeinstallprompt', (e) => {
-                    e.preventDefault();
-                    deferredPrompt = e;
-                    document.getElementById('installBanner').style.display = 'flex';
+                    document.getElementById('splashScreen').style.display='none';
+                    document.getElementById('appMain').style.display='block';
+                    updateStats(); renderCategories(); applyFilters();
+                }, 400);
+                if('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+                window.addEventListener('beforeinstallprompt', e => {
+                    e.preventDefault(); deferredPrompt = e;
+                    document.getElementById('installBanner').style.display='flex';
                 });
-            } catch (error) {
-                console.error(error);
-                document.getElementById('splashStatus').textContent = '❌ فشل تحميل المكتبة. تأكد من اتصالك بالإنترنت ثم حدث الصفحة.';
+            } catch(e) {
+                console.error(e);
+                document.getElementById('splashStatus').textContent = '❌ فشل تحميل المكتبة. تأكد من الاتصال.';
             }
-        }
-
-        function renderApp() {
-            updateStats();
-            renderCategories();
-            applyFilters();
         }
 
         function updateStats() {
-            document.getElementById('statTotal').textContent = allBooks.length.toLocaleString('ar-EG');
-            const cats = new Set(allBooks.map(b => b.category).filter(Boolean));
-            document.getElementById('statCats').textContent = cats.size;
-            const donors = new Set(allBooks.map(b => b.donor).filter(d => d && d !== 'بدون'));
-            document.getElementById('statDonors').textContent = donors.size;
-            const years = allBooks.map(b => parseInt(b.year)).filter(y => !isNaN(y) && y > 100);
-            document.getElementById('statYear').textContent = years.length > 0 ? Math.min(...years) : '-';
-            document.getElementById('appTitle').textContent = `📚 ${allBooks.length.toLocaleString('ar-EG')} كتاب`;
+            document.getElementById('statTotal').textContent = allBooks.length;
+            document.getElementById('statCats').textContent = new Set(allBooks.map(b=>b.category).filter(Boolean)).size;
+            document.getElementById('statDonors').textContent = new Set(allBooks.map(b=>b.donor).filter(d=>d&&d!=='بدون')).size;
+            const years = allBooks.map(b=>parseInt(b.year)).filter(y=>!isNaN(y)&&y>100);
+            document.getElementById('statYear').textContent = years.length ? Math.min(...years) : '-';
+            document.getElementById('appTitle').textContent = `📚 ${allBooks.length} كتاب`;
         }
 
         function renderCategories() {
             const cats = {};
-            allBooks.forEach(b => { const c = b.category || 'غير مصنف'; cats[c] = (cats[c] || 0) + 1; });
-            const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
-            let html = `<button class="chip ${selectedCategory === '' ? 'active' : ''}" onclick="selectCategory('')">الكل (${allBooks.length})</button>`;
-            sorted.forEach(([cat, count]) => {
-                html += `<button class="chip ${selectedCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat.replace(/'/g, "\\'")}')">${cat} (${count})</button>`;
-            });
+            allBooks.forEach(b=>{ const c = b.category||'غير مصنف'; cats[c] = (cats[c]||0)+1; });
+            const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+            let html = `<button class="chip ${selectedCategory===''?'active':''}" onclick="selectCategory('')">الكل (${allBooks.length})</button>`;
+            sorted.forEach(([c,n]) => html += `<button class="chip ${selectedCategory===c?'active':''}" onclick="selectCategory('${c.replace(/'/g,"\\'")}')">${c} (${n})</button>`);
             document.getElementById('categoryChips').innerHTML = html;
         }
 
-        function selectCategory(cat) {
-            selectedCategory = cat;
-            currentPage = 1;
-            document.getElementById('searchInput').value = '';
-            renderCategories();
-            applyFilters();
-        }
+        function selectCategory(cat) { selectedCategory=cat; currentPage=1; document.getElementById('searchInput').value=''; renderCategories(); applyFilters(); }
 
         function applyFilters() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            currentResults = allBooks.filter(book => {
-                const matchSearch = !searchTerm || 
-                    (book.title || '').toLowerCase().includes(searchTerm) ||
-                    (book.author || '').toLowerCase().includes(searchTerm) ||
-                    (book.investigator || '').toLowerCase().includes(searchTerm) ||
-                    (book.publisher || '').toLowerCase().includes(searchTerm) ||
-                    (book.donor || '').toLowerCase().includes(searchTerm);
-                const matchCategory = !selectedCategory || book.category === selectedCategory;
-                return matchSearch && matchCategory;
+            const s = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentResults = allBooks.filter(b => {
+                const match = !s || [b.title,b.author,b.investigator,b.publisher,b.donor].some(v=> (v||'').toLowerCase().includes(s));
+                return match && (!selectedCategory || b.category===selectedCategory);
             });
-            currentPage = 1;
-            renderBooks();
-            renderPagination();
+            currentPage=1;
+            renderBooks(); renderPagination();
         }
 
-        function esc(str) {
-            return String(str == null ? '' : str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        }
+        function esc(str) { return String(str??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
         function renderBooks() {
-            const start = (currentPage - 1) * pageSize;
-            const end = start + pageSize;
-            const pageBooks = currentResults.slice(start, end);
-
-            document.getElementById('resultsInfo').textContent = 
-                `📋 عرض ${start + 1}-${Math.min(end, currentResults.length)} من ${currentResults.length} كتاب`;
-
+            const start = (currentPage-1)*pageSize;
+            const pageBooks = currentResults.slice(start, start+pageSize);
+            document.getElementById('resultsInfo').textContent = `📋 عرض ${start+1}-${Math.min(start+pageSize, currentResults.length)} من ${currentResults.length}`;
             const container = document.getElementById('bookList');
-            
-            if (pageBooks.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد كتب مطابقة</p></div>';
-                return;
-            }
-
+            if (!pageBooks.length) { container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد كتب</p></div>'; return; }
             let html = '';
-            for (let i = 0; i < pageBooks.length; i++) {
-                const book = pageBooks[i];
-                if (!book || typeof book !== 'object') {
-                    console.warn('عنصر غير صالح في الصفحة', i);
-                    continue;
-                }
+            for (const book of pageBooks) {
+                if (!book || book.id==null) continue;
                 try {
-                    const id = (typeof book.id !== 'undefined' && book.id !== null) ? book.id : '';
-                    if (id === '') {
-                        console.warn('كتاب بدون معرف، تخطيه', book);
-                        continue;
-                    }
-                    html += `
-                        <div class="book-card" onclick="showDetail(${id})">
-                            <div class="book-title">${esc(book.title)}</div>
-                            <div class="book-meta">
-                                <span>✍️ ${esc(book.author)}</span>
-                                ${book.publisher ? '<span>🏢 ' + esc(book.publisher).substring(0, 25) + '</span>' : ''}
-                                ${book.year ? '<span>📅 ' + esc(book.year) + '</span>' : ''}
-                                ${book.category ? '<span>📂 ' + esc(book.category) + '</span>' : ''}
-                            </div>
-                            ${book.donor && book.donor !== 'بدون' ? '<div class="donor">🎁 ' + esc(book.donor) + '</div>' : ''}
-                        </div>
-                    `;
-                } catch (err) {
-                    console.warn('فشل عرض كتاب رقم ' + (book.id || 'غير معروف'), err);
-                }
+                    html += `<div class="book-card" onclick="showDetail(${book.id})">
+                        <div class="book-title">${esc(book.title)}</div>
+                        <div class="book-meta"><span>✍️ ${esc(book.author)}</span>${book.publisher?`<span>🏢 ${esc(book.publisher).substring(0,25)}</span>`:''}${book.year?`<span>📅 ${esc(book.year)}</span>`:''}${book.category?`<span>📂 ${esc(book.category)}</span>`:''}</div>
+                        ${book.donor && book.donor!=='بدون'?`<div class="donor">🎁 ${esc(book.donor)}</div>`:''}
+                    </div>`;
+                } catch(e) { console.warn('خطأ في عرض كتاب', book.id, e); }
             }
             container.innerHTML = html;
         }
 
         function renderPagination() {
-            const totalPages = Math.ceil(currentResults.length / pageSize);
-            const container = document.getElementById('paginationContainer');
-            
-            if (totalPages <= 1 && pageSize >= currentResults.length) {
-                container.innerHTML = '';
-                return;
-            }
-
-            let html = '';
-            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">⬅️ السابق</button>`;
-            html += `<span style="padding:6px 12px;font-size:0.85em;">صفحة ${currentPage} من ${totalPages}</span>`;
-            html += `<button class="btn btn-outline" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} style="font-size:0.8em;padding:6px 12px;">التالي ➡️</button>`;
-
-            html += `
-                <select id="pageSizeSelect" onchange="changePageSize()" style="font-size:0.8em;padding:6px 10px;margin-right:10px;">
-                    <option value="30" ${pageSize === 30 ? 'selected' : ''}>30 في الصفحة</option>
-                    <option value="50" ${pageSize === 50 ? 'selected' : ''}>50 في الصفحة</option>
-                    <option value="70" ${pageSize === 70 ? 'selected' : ''}>70 في الصفحة</option>
-                    <option value="100" ${pageSize === 100 ? 'selected' : ''}>100 في الصفحة</option>
+            const total = Math.ceil(currentResults.length/pageSize);
+            const c = document.getElementById('paginationContainer');
+            if (total<=1 && pageSize>=currentResults.length) { c.innerHTML=''; return; }
+            c.innerHTML = `
+                <button class="btn btn-outline" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}>⬅️ السابق</button>
+                <span>صفحة ${currentPage} من ${total}</span>
+                <button class="btn btn-outline" onclick="goToPage(${currentPage+1})" ${currentPage===total?'disabled':''}>التالي ➡️</button>
+                <select onchange="changePageSize(this.value)">
+                    <option value="30" ${pageSize==30?'selected':''}>30</option>
+                    <option value="50" ${pageSize==50?'selected':''}>50</option>
+                    <option value="70" ${pageSize==70?'selected':''}>70</option>
+                    <option value="100" ${pageSize==100?'selected':''}>100</option>
                 </select>
             `;
-            container.innerHTML = html;
         }
 
-        function changePageSize() {
-            const select = document.getElementById('pageSizeSelect');
-            if (select) {
-                pageSize = parseInt(select.value, 10);
-                currentPage = 1;
-                renderBooks();
-                renderPagination();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        function goToPage(page) {
-            const totalPages = Math.ceil(currentResults.length / pageSize);
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
-            renderBooks();
-            renderPagination();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function changePageSize(val) { pageSize=+val; currentPage=1; renderBooks(); renderPagination(); }
+        function goToPage(p) { const total = Math.ceil(currentResults.length/pageSize); if(p<1||p>total) return; currentPage=p; renderBooks(); renderPagination(); window.scrollTo({top:0,behavior:'smooth'}); }
 
         function showDetail(id) {
-            const book = allBooks.find(b => b.id === id);
-            if (!book) return;
+            const b = allBooks.find(x=>x.id===id); if(!b) return;
             document.getElementById('detailContent').innerHTML = `
-                <div class="detail-card">
-                    <h2 style="color:var(--primary);margin-bottom:15px;">📖 ${esc(book.title)}</h2>
-                    <div class="detail-row"><span class="detail-label">المؤلف</span><span class="detail-value">${esc(book.author)}</span></div>
-                    <div class="detail-row"><span class="detail-label">المحقق / المترجم</span><span class="detail-value">${esc(book.investigator)}</span></div>
-                    <div class="detail-row"><span class="detail-label">دار النشر</span><span class="detail-value">${esc(book.publisher)}</span></div>
-                    <div class="detail-row"><span class="detail-label">التصنيف</span><span class="detail-value">${esc(book.category)}</span></div>
-                    <div class="detail-row"><span class="detail-label">عدد المجلدات</span><span class="detail-value">${esc(book.volumes)}</span></div>
-                    <div class="detail-row"><span class="detail-label">رقم الطبعة</span><span class="detail-value">${esc(book.edition)}</span></div>
-                    <div class="detail-row"><span class="detail-label">المتبرع</span><span class="detail-value" style="color:var(--primary-light);">🎁 ${esc(book.donor)}</span></div>
-                    <div class="detail-row"><span class="detail-label">سنة النشر</span><span class="detail-value">${esc(book.year)}</span></div>
-                    <div class="detail-row"><span class="detail-label">عدد النسخ</span><span class="detail-value">${esc(book.copies)}</span></div>
-                </div>
-            `;
+                <div class="detail-card"><h2>📖 ${esc(b.title)}</h2>
+                <div class="detail-row"><span>المؤلف</span><span>${esc(b.author)}</span></div>
+                <div class="detail-row"><span>المحقق</span><span>${esc(b.investigator)}</span></div>
+                <div class="detail-row"><span>الناشر</span><span>${esc(b.publisher)}</span></div>
+                <div class="detail-row"><span>التصنيف</span><span>${esc(b.category)}</span></div>
+                <div class="detail-row"><span>المجلدات</span><span>${esc(b.volumes)}</span></div>
+                <div class="detail-row"><span>الطبعة</span><span>${esc(b.edition)}</span></div>
+                <div class="detail-row"><span>المتبرع</span><span>🎁 ${esc(b.donor)}</span></div>
+                <div class="detail-row"><span>السنة</span><span>${esc(b.year)}</span></div>
+                <div class="detail-row"><span>النسخ</span><span>${esc(b.copies)}</span></div></div>`;
             goToPage('pageDetail');
         }
 
         function renderDonors() {
-            const donors = {};
-            allBooks.forEach(b => {
-                const d = b.donor || 'غير معروف';
-                if (d === 'بدون') return;
-                donors[d] = (donors[d] || 0) + 1;
-            });
-            const sorted = Object.entries(donors).sort((a, b) => b[1] - a[1]);
-            document.getElementById('donorList').innerHTML = sorted.map(([name, count]) => `
-                <div class="book-card" onclick="filterByDonor('${name.replace(/'/g, "\\'")}')">
-                    <div class="book-title">🎁 ${name}</div>
-                    <div class="book-meta"><span>📚 ${count} كتاب</span></div>
-                </div>
-            `).join('');
+            const dons = {};
+            allBooks.forEach(b=>{ if(b.donor&&b.donor!=='بدون') dons[b.donor]=(dons[b.donor]||0)+1; });
+            document.getElementById('donorList').innerHTML = Object.entries(dons).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="book-card" onclick="filterByDonor('${n.replace(/'/g,"\\'")}')"><div class="book-title">🎁 ${n}</div><div class="book-meta"><span>📚 ${c} كتاب</span></div></div>`).join('');
         }
 
-        function filterByDonor(donorName) {
-            document.getElementById('searchInput').value = donorName;
-            selectedCategory = '';
-            renderCategories();
-            applyFilters();
-            switchTab('pageCatalog', document.querySelector('.bottom-nav button:first-child'));
-        }
+        function filterByDonor(name) { document.getElementById('searchInput').value=name; selectedCategory=''; renderCategories(); applyFilters(); switchTab('pageCatalog', document.querySelector('.bottom-nav button:first-child')); }
+        function switchTab(id, btn) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); if(id==='pageDonors') renderDonors(); }
+        function goToPage(id) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-        function switchTab(pageId, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            if (pageId === 'pageDonors') renderDonors();
-        }
-
-        function goToPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((result) => {
-                    if (result.outcome === 'accepted') showToast('✅ تم التثبيت');
-                    deferredPrompt = null;
-                    document.getElementById('installBanner').style.display = 'none';
-                });
-            } else {
-                showToast('ℹ️ التطبيق مثبت بالفعل');
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+        function installApp() { if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(r=>{ if(r.outcome==='accepted') alert('تم التثبيت'); deferredPrompt=null; document.getElementById('installBanner').style.display='none'; }); } }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                let timer;
-                searchInput.addEventListener('input', () => {
-                    clearTimeout(timer);
-                    timer = setTimeout(applyFilters, 300);
-                });
-            }
-            initApp();
+            document.getElementById('searchInput').addEventListener('input', function() { clearTimeout(this.timer); this.timer = setTimeout(applyFilters,300); });
+            init();
         });
     </script>
 </body>
