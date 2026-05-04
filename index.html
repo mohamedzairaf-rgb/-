@@ -43,38 +43,16 @@
         .stat-card .number { font-size: 1.6em; font-weight: bold; color: var(--primary); }
         .stat-card .label { font-size: 0.75em; color: #888; margin-top: 3px; }
 
-        /* شريط البحث مع القائمة المنسدلة */
         .search-bar {
-            background: var(--card);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background: var(--card); border-radius: 25px; display: flex; align-items: center;
+            gap: 6px; padding: 6px 10px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             flex-wrap: wrap;
         }
-        .search-bar input {
-            flex: 2;
-            min-width: 160px;
-            border: none;
-            font-size: 16px;
-            padding: 8px;
-            background: transparent;
-            font-family: inherit;
-        }
+        .search-bar input { flex: 2; min-width: 160px; border: none; font-size: 16px; padding: 8px; background: transparent; font-family: inherit; }
         .search-bar input:focus { outline: none; }
         .search-bar select {
-            flex: 1;
-            min-width: 110px;
-            padding: 8px 6px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 0.9em;
-            background: white;
-            cursor: pointer;
+            flex: 1; min-width: 110px; padding: 8px 6px; border: 1px solid #ddd;
+            border-radius: 20px; font-family: inherit; font-size: 0.9em; background: white; cursor: pointer;
         }
         .search-bar .icon { font-size: 1.3em; opacity: 0.5; margin: 0 4px; }
 
@@ -95,7 +73,12 @@
         .btn { padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-family: inherit; font-size: 0.9em; }
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .empty-state { text-align: center; padding: 40px 20px; color: #aaa; } .empty-state .icon { font-size: 3em; margin-bottom: 10px; }
-        .install-banner { background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 12px 16px; border-radius: 10px; margin: 10px; display: none; align-items: center; justify-content: space-between; }
+
+        .install-banner {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 12px 16px; border-radius: 10px; margin: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
         .install-banner button { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; }
         @media (min-width: 768px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
     </style>
@@ -111,7 +94,12 @@
     </div>
 
     <div id="appMain" style="display:none;">
-        <div class="install-banner" id="installBanner"><span>📲 ثبّت التطبيق للوصول دون إنترنت</span><button onclick="installApp()">تثبيت</button></div>
+        <!-- بانر التثبيت يظهر عند توفر beforeinstallprompt -->
+        <div class="install-banner" id="installBanner" style="display: none;">
+            <span>📲 أضف التطبيق إلى شاشتك الرئيسية</span>
+            <button onclick="installApp()">تثبيت</button>
+        </div>
+
         <div class="app-bar"><h1 id="appTitle">📚 المكتبة الوقفية</h1><span class="badge">🕌 وقف</span></div>
         <div class="main-content">
             <div class="page active" id="pageCatalog">
@@ -122,7 +110,6 @@
                     <div class="stat-card"><div class="number" id="statYear">-</div><div class="label">📅 أقدم</div></div>
                 </div>
 
-                <!-- شريط البحث مع القائمة المنسدلة -->
                 <div class="search-bar">
                     <span class="icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="اكتب كلمة البحث..." autocomplete="off">
@@ -153,6 +140,8 @@
         <div class="bottom-nav">
             <button class="active" onclick="switchTab('pageCatalog', this)"><span class="icon">📚</span> الفهرس</button>
             <button onclick="switchTab('pageDonors', this)"><span class="icon">🎁</span> المتبرعون</button>
+            <!-- زر التثبيت الدائم في شريط التنقل -->
+            <button onclick="installApp()" id="installNavBtn"><span class="icon">📲</span> تثبيت</button>
             <button onclick="window.location.href='admin.html'"><span class="icon">⚙️</span> إدارة</button>
         </div>
     </div>
@@ -163,9 +152,8 @@
         const STORE_NAME = 'books';
 
         let DB, allBooks = [], selectedCategory = '', deferredPrompt;
-        let bookElems = []; // عناصر DOM للكتب
+        let bookElems = [];
 
-        // ---- IndexedDB ----
         function openDB() {
             return new Promise((resolve, reject) => {
                 const r = indexedDB.open(DB_NAME, 1);
@@ -202,7 +190,6 @@
             });
         }
 
-        // ---- تحليل CSV متقدم (يتجاهل الفواصل داخل النصوص) ----
         function parseCSV(text) {
             const lines = text.split(/\r?\n/).filter(l => l.trim());
             if (lines.length < 2) throw new Error('ملف فارغ');
@@ -233,7 +220,6 @@
             return books;
         }
 
-        // ---- تطبيع النص العربي (تجاهل الهمزات وعلامات التشكيل) ----
         function normalizeArabic(str) {
             return str
                 .replace(/[إأآا]/g, 'ا')
@@ -245,7 +231,6 @@
                 .trim();
         }
 
-        // ---- تهيئة التطبيق ----
         async function initApp() {
             try {
                 DB = await openDB();
@@ -281,17 +266,25 @@
                 }, 400);
 
                 if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+                
+                // التقاط حدث التثبيت التلقائي للبانر
                 window.addEventListener('beforeinstallprompt', e => {
-                    e.preventDefault(); deferredPrompt = e;
+                    e.preventDefault();
+                    deferredPrompt = e;
                     document.getElementById('installBanner').style.display = 'flex';
                 });
+
+                // إخفاء زر التثبيت إذا كان التطبيق مثبتًا بالفعل (اختياري)
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    document.getElementById('installNavBtn').style.display = 'none';
+                }
+
             } catch (e) {
                 console.error(e);
                 document.getElementById('splashStatus').textContent = '❌ فشل التحميل. تأكد من الاتصال.';
             }
         }
 
-        // ---- بناء واجهة الكتب (مرة واحدة) ----
         function buildUI() {
             updateStats();
             renderCategories();
@@ -351,7 +344,6 @@
             applyFilters();
         }
 
-        // ---- فلترة حية (تبحث في الحقل المحدد أو كل الحقول) ----
         function applyFilters() {
             const rawSearch = document.getElementById('searchInput').value.trim();
             const searchTerm = normalizeArabic(rawSearch);
@@ -360,19 +352,16 @@
 
             for (const item of bookElems) {
                 const { book, elem } = item;
-                // فلتر التصنيف
                 if (selectedCategory && book.category !== selectedCategory) {
                     elem.classList.add('hidden');
                     continue;
                 }
-                // إذا لم يكن هناك نص بحث
                 if (!searchTerm) {
                     elem.classList.remove('hidden');
                     visibleCount++;
                     continue;
                 }
 
-                // تحديد الحقل المطلوب
                 let fieldValue = '';
                 if (field === 'all') {
                     fieldValue = [book.title, book.author, book.investigator, book.publisher, book.category, book.donor, book.year].join(' ');
@@ -392,7 +381,6 @@
                 (searchTerm || selectedCategory) ? `🔍 ${visibleCount} كتاب مطابق` : `${allBooks.length} كتاب`;
         }
 
-        // ---- تفاصيل الكتاب ----
         function showDetail(id) {
             const b = allBooks.find(x => x.id === id);
             if (!b) return;
@@ -413,7 +401,6 @@
             goToPage('pageDetail');
         }
 
-        // ---- المتبرعون ----
         function renderDonors() {
             const dons = {};
             allBooks.forEach(b => { if (b.donor && b.donor !== 'بدون') dons[b.donor] = (dons[b.donor] || 0) + 1; });
@@ -432,7 +419,6 @@
             switchTab('pageCatalog', document.querySelector('.bottom-nav button:first-child'));
         }
 
-        // ---- التنقل ----
         function switchTab(id, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -446,18 +432,28 @@
             document.getElementById(id).classList.add('active');
         }
 
+        // دالة التثبيت المحسنة
         function installApp() {
             if (deferredPrompt) {
+                // الطريقة الأوتوماتيكية
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(r => {
-                    if (r.outcome === 'accepted') alert('تم التثبيت');
+                deferredPrompt.userChoice.then(choiceResult => {
+                    if (choiceResult.outcome === 'accepted') {
+                        alert('✅ تم تثبيت التطبيق بنجاح!');
+                    }
                     deferredPrompt = null;
                     document.getElementById('installBanner').style.display = 'none';
                 });
+            } else {
+                // التطبيق مثبت مسبقاً أو المتصفح لا يدعم التثبيت التلقائي
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    alert('📱 التطبيق مثبت بالفعل على جهازك.');
+                } else {
+                    alert('📲 لتثبيت التطبيق:\n\n• في Chrome: اضغط ⁝ ثم "تثبيت التطبيق"\n• في Safari: اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"');
+                }
             }
         }
 
-        // ---- ربط الأحداث ----
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
             document.getElementById('searchField').addEventListener('change', applyFilters);
